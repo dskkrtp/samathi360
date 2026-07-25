@@ -1,0 +1,25 @@
+---
+import { partners } from "../../data/partner.ts";
+import SectionTitle from "../ui/SectionTitle.astro";
+---
+
+<section class="py-16 bg-white">
+<SectionTitle
+            align="center"
+            title="Clients & Partners"
+            description="ต้องเขียนคำอธิบายอะไรไหม" />
+  <div class="max-w-6xl mx-auto px-6 text-center">
+    
+    <div class="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-7 items-center">
+      {partners.map((partner) => (
+          <div class="w-24 h-24 md:w-32 md:h-32 flex items-center justify-center hover:-translate-y-0.5 hover:scale-105">
+            <img 
+              src={partner.logo} 
+              alt={partner.name} 
+              class="max-w-[80%] max-h-[80%] w-auto h-auto object-contain hover:grayscale-0 transition duration-300" 
+            />
+          </div>
+      ))}
+    </div>
+  </div>
+</section>

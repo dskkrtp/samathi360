@@ -1,0 +1,97 @@
+---
+import { getCollection, render } from 'astro:content';
+import MainLayout from "../../layouts/MainLayout.astro";
+
+export async function getStaticPaths() {
+  const projects = await getCollection('awards');
+  return projects.map(p => ({ params: { slug: p.id }, props: { p } }));
+}
+
+const { p } = Astro.props;
+const { Content } = await render(p);
+
+const videoUrl = p.data.videoUrl;
+
+// ฟังก์ชันตรวจสอบประเภทวิดีโอ
+function getVideoType(url: string) {
+  if (url.includes("youtube.com") || url.includes("youtu.be")) return "youtube";
+  if (url.includes("vimeo.com")) return "vimeo";
+  return "other"; // สำหรับพวก TikTok/IG/FB ที่ต้องใช้ Script
+}
+
+const type = videoUrl ? getVideoType(videoUrl) : null;
+---
+
+<MainLayout title={p.data.title}>
+  <article class="max-w-4xl mx-auto px-6 py-16">
+    
+    {/* ส่วนที่ 1 & 2: หัวข้อ, Description และรูปหลัก */}
+    <h1 class="text-5xl font-bold mb-4">{p.data.title}</h1>
+
+    {/* เพิ่มส่วนแสดง description ตรงนี้ครับ (จะแสดงผลก็ต่อเมื่อมีข้อมูล description ใน markdown) */}
+    {p.data.description && (
+      <p class="text-xl text-gray-600 mb-8 leading-relaxed">
+        {p.data.description}
+      </p>
+    )}
+
+    <img src={p.data.image} class="w-full rounded-3xl mb-12" />
+
+    {/* ส่วนที่ 3: คำอธิบาย (ดึงจาก Markdown Content) */}
+    <div class="prose max-w-none 
+    prose-headings:font-bold 
+    prose-h2:text-4xl prose-h2:mt-10
+    prose-h3:text-2xl prose-h3:mt-8
+    
+    {/* เปลี่ยนตรงนี้ครับ: ให้พารากราฟแรกที่อยู่หลังหัวข้อทุกหัวข้อ ย่อหน้าอัตโนมัติ */}
+    [&_h3+p]:indent-8 
+    [&_h2+p]:indent-8 
+    prose-p:leading-relaxed">
+      <Content />
+    </div>
+    
+    {/* ส่วนที่ 4: ฝังวิดีโอ (แสดงผลเฉพาะเมื่อมี videoUrl เท่านั้น) */}
+    {videoUrl && (
+      <div class="mt-16 mb-12">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">วิดีโอที่ส่งประกวด</h2>
+
+        {type === "youtube" && (
+          <div class="aspect-video w-full">
+            <iframe src={videoUrl} class="w-full h-full rounded-3xl" allowfullscreen></iframe>
+          </div>
+        )}
+
+        {type === "vimeo" && (
+          <div class="aspect-video w-full">
+            <iframe src={videoUrl} class="w-full h-full rounded-3xl" loading="lazy" allowfullscreen></iframe>
+          </div>
+        )}
+
+        {type === "other" && (
+          <div class="video-container">
+            <Fragment set:html={videoUrl} />
+          </div>
+        )}
+      </div>
+    )}
+    
+    {/* ส่วนที่ 5: แกลเลอรีรูปเสริม */}
+    {p.data.galleryImages && p.data.galleryImages.length > 0 && (
+      <div class="mt-16">
+        <h2 class="text-2xl font-bold mb-8">แกลเลอรีรูปภาพเพิ่มเติม</h2>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+          {p.data.galleryImages.map((img) => (
+            <div class="aspect-square overflow-hidden rounded-2xl shadow-sm">
+              <img 
+                src={img} 
+                alt="Gallery image" 
+                class="w-full h-full object-cover hover:scale-110 transition-transform duration-500" 
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+    
+  </article>
+</MainLayout>

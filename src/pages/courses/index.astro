@@ -1,0 +1,32 @@
+---
+import MainLayout from "../../layouts/MainLayout.astro";
+import CourseCard from "../../components/ui/CourseCard.astro";
+import CourseSection from "../../components/sections/CourseSection.astro";
+import SectionTitle from "../../components/ui/SectionTitle.astro";
+import { getCollection } from "astro:content";
+
+const courses = await getCollection("courses");
+
+courses.sort((a, b) => a.data.order - b.data.order);
+---
+
+<MainLayout>
+    <CourseSection 
+      title="Speaker Event" 
+      description="mindfulness section" 
+      filterCategory="speaker" 
+    />
+
+    <CourseSection 
+      title="หลักสูตร Private" 
+      description="mindfulness workshop" 
+      filterCategory="private" 
+    />
+
+    <CourseSection 
+      title="หลักสูตร In House" 
+      description="mindfulness section" 
+      filterCategory="inhouse" 
+    />
+
+</MainLayout>

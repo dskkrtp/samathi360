@@ -1,0 +1,48 @@
+---
+import MainLayout from "../layouts/MainLayout.astro";
+import Container from "../components/ui/Container.astro";
+import SectionTitle from "../components/ui/SectionTitle.astro";
+import ImageCardSection from "../components/sections/ImageCardSection.astro";
+import SpeakerProfileSection from "../components/sections/SpeakerProfileSection.astro";
+---
+
+<MainLayout title="สมาธิ 360 องศา">
+
+  <SpeakerProfileSection 
+    image="images/PSi/PSi-Profile-2.jpg"
+    imageAlt="Sasi"
+    imagePosition="left"
+  
+    tagline="sasiwimol"
+    title1={`อาจารย์ศิ\nศศิวิมล ควรหัตถ์`}
+    subDescription={[
+      "อาจารย์พิเศษ วิชาความสุขในพลวัตของชีวิต (Happiness amongst Life Dynamics)  มหาวิทยาลัย เกษตรศาสตร์",
+      "ผู้ก่อตั้งช่องสมาธิ 360 องศา ผู้ติดตามรวม 56,000 คน",
+      "Mindfulness Trainer ประสบการณ์ 15 ปี ผู้เข้าร่วมกว่า 10,000 คน"
+    ]}
+    description1="Samathi360"
+  
+    buttonText="ดูข้อมูลเพิ่มเติม"
+    buttonHref="/profiles/sasiwimol"
+
+    title2="Specialist"
+
+    features={[
+      { icon: "lucide:user-star", title: "Mindful Leadership", description: "" },
+      { icon: "lucide:heart-plus", title: "Well-Being", description: "" },
+      { icon: "lucide:waypoints", title: "Mindful Practice for Modern Life", description: "" },
+      { icon: "lucide:brain-circuit", title: "D.O.S.E Happiness", description: "" }
+    ]}
+  />
+
+    
+    <Container>
+        <SectionTitle
+            title="รางวัลที่ได้รับ"
+            description=""
+        />
+
+        <ImageCardSection collection="awards" title="ข้อมูลชุดที่ 1" aspectRatio="video" />
+    </Container>
+    
+</MainLayout>

@@ -1,0 +1,87 @@
+---
+import { getCollection } from "astro:content";
+import Button from "../ui/Button.astro";
+
+// โหลดกิจกรรมทั้งหมด
+const events = await getCollection("events");
+
+// เหลือเฉพาะที่เผยแพร่
+const publishedEvents = events.filter(
+  (event) => event.data.published
+);
+
+// วันนี้
+const today = new Date();
+
+// เหลือเฉพาะกิจกรรมที่ยังไม่ผ่าน
+const upcomingEvents = publishedEvents.filter(
+  (event) => event.data.eventDate >= today
+);
+
+// เหลือเฉพาะ Featured
+const featuredEvents = upcomingEvents.filter(
+  (event) => event.data.featured
+);
+
+// เรียงตาม order
+featuredEvents.sort(
+  (a, b) => a.data.order - b.data.order
+);
+
+// ถ้ามี featured ใช้อันแรก
+// ถ้าไม่มี ใช้กิจกรรมแรกที่กำลังจะมาถึง
+const featuredEvent =
+  featuredEvents[0] ?? upcomingEvents[0];
+---
+
+{
+  featuredEvent && (
+    <section class="relative w-full h-[600px] flex items-center justify-start overflow-hidden">
+      
+      {/* ชั้นที่ 1: รูปภาพพื้นหลัง (Full-width) */}
+      <img
+        src={featuredEvent.data.image}
+        alt={featuredEvent.data.title}
+        class="absolute inset-0 w-full h-full object-cover"
+      />
+
+      {/* ชั้นที่ 2: Overlay สีจางๆ เพื่อให้อ่านข้อความง่ายขึ้น */}
+      <div class="absolute inset-0 bg-black/30"></div>
+
+      {/* ชั้นที่ 3: เนื้อหา (จัดชิดซ้ายด้วย items-start) */}
+      <div class="relative max-w-6xl mx-auto px-6 w-full flex flex-col items-start justify-center text-white">
+        
+        {/* ป้าย Subtitle */}
+        <p class="inline-block bg-white text-primary font-bold tracking-wide uppercase text-sm px-4 py-1.5 rounded-full mb-6">
+          {featuredEvent.data.subtitle}
+        </p>
+
+        {/* หัวข้อ */}
+        <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight mb-4" style="text-shadow: 0 2px 10px rgba(0,0,0,0.5);">
+          {featuredEvent.data.title}
+        </h1>
+
+        {/* วันที่และเวลา */}
+        <div class="space-y-1 text-lg sm:text-xl md:text-2xl font-medium" style="text-shadow: 0 2px 8px rgba(0,0,0,0.5);">
+          <p>
+            วันที่ {featuredEvent.data.eventDate.toLocaleDateString("th-TH", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+              calendar: "buddhist",
+            })}
+          </p>
+          <p>เวลา {featuredEvent.data.startTime} - {featuredEvent.data.endTime} น.</p>
+        </div>
+
+        {/* ปุ่ม */}
+        <div class="mt-8">
+          <Button href={`/events/${featuredEvent.id}`}>
+            ดูรายละเอียดเพิ่มเติม
+          </Button>
+        </div>
+
+      </div>
+    </section>
+  )
+}

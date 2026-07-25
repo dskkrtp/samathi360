@@ -1,0 +1,158 @@
+---
+const { data, Content } = Astro.props;
+
+// 1. กำหนดหัวข้อฝั่งซ้าย (Education, Certifications, Training)
+const leftColumn: any[] = [];
+
+if (data.educations && data.educations.length > 0) {
+  leftColumn.push({
+    title: 'Education',
+    items: data.educations
+  });
+}
+if (data.certifications && data.certifications.length > 0) {
+  leftColumn.push({
+    title: 'Certifications',
+    items: data.certifications
+  });
+}
+if (data.training && data.training.length > 0) {
+  leftColumn.push({
+    title: 'Training',
+    items: data.training
+  });
+}
+
+// 2. กำหนดหัวข้อฝั่งขวา (Facilitator, Influencer & KOL, Awards)
+const rightColumn: any[] = [];
+
+if (data.facilitator && data.facilitator.length > 0) {
+  rightColumn.push({
+    title: 'Experience',
+    items: data.facilitator
+  });
+}
+if (data.influencer && data.influencer.length > 0) {
+  rightColumn.push({
+    title: 'Influencer & KOL',
+    items: data.influencer
+  });
+}
+if (data.awards && data.awards.length > 0) {
+  rightColumn.push({
+    title: 'Awards',
+    items: data.awards
+  });
+}
+
+const hasHighlights = data.highlights && data.highlights.length > 0;
+---
+
+<div class="max-w-4xl mx-auto font-sans text-[#2c3e50] my-4 sm:my-8">
+  
+  {/* ส่วน Header */}
+  <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-10 mb-16">
+    {data.image && (
+      <div class="shrink-0">
+        <img 
+          src={data.image} 
+          alt={data.name} 
+          class="w-32 h-32 sm:w-44 sm:h-44 rounded-full object-cover border-4 border-white shadow-md"
+        />
+      </div>
+    )}
+    <div class="text-center sm:text-left sm:pt-4">
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-wide mb-2 text-[#1b365d]">{data.name}</h1>
+      <p class="text-[#1b365d] text-lg sm:text-xl font-semibold">{data.role}</p>
+    </div>
+  </div>
+
+  <div class="space-y-12">
+
+    {/* ส่วนเนื้อหา Markdown */}
+    {Content && (
+      <div class="prose max-w-none text-sm text-[#555c65] leading-relaxed">
+        <Content />
+      </div>
+    )}
+
+    {/* Highlights */}
+    {hasHighlights && (
+      <div>
+        <h2 class="text-sm font-bold text-[#1b365d] uppercase tracking-wider border-b border-[#e2ded4] pb-2 mb-4">Professional Highlights</h2>
+        <ul class="space-y-2 text-sm text-[#555c65] list-none">
+          {data.highlights.map((item: string) => (
+            <li class="flex items-start gap-2.5">
+              <span class="inline-block w-1.5 h-1.5 mt-1.5 rounded-full bg-[#d4af37] shrink-0"></span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+
+    {/* 2-Column Grid */}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-12">
+      
+      {/* คอลัมน์ซ้าย */}
+      <div class="space-y-10">
+        {leftColumn.map((section) => (
+          <div>
+            <h2 class="text-sm font-bold text-[#1b365d] uppercase tracking-wider border-b border-[#e2ded4] pb-2 mb-4">{section.title}</h2>
+            <div class="space-y-5">
+              {section.items.map((item: any) => (
+                <div>
+                  {item.title && <h3 class="font-semibold text-[#1b365d] text-sm">{item.title}</h3>}
+                  
+                  {Array.isArray(item.description) ? (
+                    <ul class="mt-1.5 space-y-1.5 text-xs text-[#555c65] list-none">
+                      {item.description.map((desc: string) => (
+                        <li class="flex items-start gap-2">
+                          <span class="inline-block w-1 h-1 mt-1.5 rounded-full bg-[#1b365d]/50 shrink-0"></span>
+                          <span>{desc}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    item.description && <p class="text-xs text-[#555c65] mt-1">{item.description}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* คอลัมน์ขวา */}
+      <div class="space-y-10">
+        {rightColumn.map((section) => (
+          <div>
+            <h2 class="text-sm font-bold text-[#1b365d] uppercase tracking-wider border-b border-[#e2ded4] pb-2 mb-4">{section.title}</h2>
+            <div class="space-y-5">
+              {section.items.map((item: any) => (
+                <div>
+                  {item.title && <h3 class="font-semibold text-[#1b365d] text-sm">{item.title}</h3>}
+                  
+                  {Array.isArray(item.description) ? (
+                    <ul class="mt-1.5 space-y-1.5 text-xs text-[#555c65] list-none">
+                      {item.description.map((desc: string) => (
+                        <li class="flex items-start gap-2">
+                          <span class="inline-block w-1 h-1 mt-1.5 rounded-full bg-[#1b365d]/50 shrink-0"></span>
+                          <span>{desc}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    item.description && <p class="text-xs text-[#555c65] mt-1">{item.description}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+    </div>
+
+  </div>
+</div>

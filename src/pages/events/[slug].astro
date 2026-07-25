@@ -1,0 +1,39 @@
+---
+import MainLayout from "../../layouts/MainLayout.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const events = await getCollection("events");
+
+  return events.map((event) => ({
+    params: {
+      slug: event.id,
+    },
+    props: {
+      event,
+    },
+  }));
+}
+
+const { event } = Astro.props;
+---
+
+<MainLayout>
+
+  <section class="py-20">
+
+    <div class="max-w-4xl mx-auto px-6">
+
+      <h1 class="text-4xl font-bold">
+        {event.data.title}
+      </h1>
+
+      <div class="mt-10 prose">
+        {event.body}
+      </div>
+
+    </div>
+
+  </section>
+
+</MainLayout>

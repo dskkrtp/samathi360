@@ -1,0 +1,32 @@
+---
+import { getCollection, render } from 'astro:content';
+import MainLayout from "../../layouts/MainLayout.astro";
+import Container from "../../components/ui/Container.astro";
+import ProfileList from "../../components/ui/ProfileList.astro"; // 👈 1. นำเข้าคอมโพเนนต์ใหม่
+import TeamMemberCV from '../../components/sections/TeamMemberCV.astro';
+
+export async function getStaticPaths() {
+  const profiles = await getCollection('profiles');
+  return profiles.map((profile) => ({
+    params: { slug: profile.id }, 
+    props: { profile },
+  }));
+}
+
+const { profile } = Astro.props;
+
+// ดึงข้อมูลทั้งหมดจาก Frontmatter (profile.data) มาใช้งาน
+const data = profile.data;
+---
+
+<MainLayout title={`${data.name} - โปรไฟล์`}>
+  <Container>
+    <main class="max-w-4xl mx-auto py-12">
+      
+      {/* เรียกใช้งานคอมโพเนนต์ TeamMemberCV ที่จัดการเรื่องเลย์เอาต์ ซ้าย-ขวา และ Optional ให้อัตโนมัติ */}
+      <TeamMemberCV data={data} />
+
+    </main>
+  </Container>
+</MainLayout>
+

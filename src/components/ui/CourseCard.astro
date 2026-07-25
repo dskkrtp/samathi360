@@ -1,0 +1,38 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  href: string;
+  image: string;
+  category: string;
+  featured: boolean;
+  
+  // Props สำหรับการกรอง
+  filterCategory?: string; 
+  showOnlyFeatured?: boolean;
+}
+
+const { title, description, href, image, category, featured, filterCategory, showOnlyFeatured } = Astro.props;
+
+// LOGIC ตัดสินใจแสดงผล (ถ้าเงื่อนไขไม่ตรง ให้คืนค่าเป็น null เพื่อไม่ให้โชว์)
+const isCategoryMatch = !filterCategory || category === filterCategory;
+const isFeaturedMatch = !showOnlyFeatured || featured === true;
+
+if (!isCategoryMatch || !isFeaturedMatch) return null;
+---
+
+<!-- CourseCard.astro -->
+<a href={href} class="group flex flex-col rounded-3xl bg-white p-4 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100">
+  {/* รูปด้านบน เพื่อให้วาง 3 การ์ดได้พอดี */}
+  <div class="overflow-hidden rounded-2xl mb-4">
+    <img src={image} alt={title} class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" />
+  </div>
+
+  {/* ข้อความอยู่ด้านล่าง */}
+  <div class="flex flex-col flex-grow">
+    <span class="text-xs mb-2 uppercase tracking-widest">{category}</span>
+    <h3 class="text-lg font-bold text-gray-900 mb-2 leading-tight">{title}</h3>
+    <p class="text-sm text-gray-600 line-clamp-2 mb-4">{description}</p>
+    <div class="mt-auto text-sm font-semibold text-primary group-hover:underline">ดูรายละเอียดเพิ่มเติม</div>
+  </div>
+</a>

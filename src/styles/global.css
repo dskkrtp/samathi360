@@ -1,0 +1,24 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  /* กำหนดให้ Tailwind รู้จักตัวแปรเหล่านี้เป็นสีในระบบ */
+  --color-primary: #1d378d;
+  --color-secondary: #d8c3a5;
+  --color-background: #faf7f2;
+  --color-text: #333333;
+}
+
+:root {
+  /* คงค่า CSS Variables ไว้ใช้กับ CSS ปกติ */
+  --color-primary: #1d378d;
+  --color-secondary: #d8c3a5;
+  --color-background: #faf7f2;
+  --color-text: #333333;
+}
+
+body {
+  font-family: "Noto Sans Thai", sans-serif;
+  color: var(--color-text);
+  background: var(--color-background);
+}

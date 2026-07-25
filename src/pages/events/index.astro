@@ -1,0 +1,27 @@
+---
+import { getCollection } from "astro:content";
+
+import FeaturedEvent from "../../components/sections/FeaturedEvent.astro";
+
+
+const events = await getCollection("events");
+
+
+const featuredEvent = events.find(
+  (event) => event.data.featured
+);
+
+---
+
+{
+  featuredEvent && (
+    <FeaturedEvent
+      title={featuredEvent.data.title}
+      description={featuredEvent.data.subtitle}
+      image={featuredEvent.data.image}
+      date={featuredEvent.data.eventDate.toLocaleDateString("th-TH")}
+      location={featuredEvent.data.location}
+      href={`/events/${featuredEvent.id}`}
+    />
+  )
+}

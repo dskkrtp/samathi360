@@ -1,0 +1,43 @@
+---
+import Button from "./Button.astro";
+
+interface Props {
+  image: string;
+  imageAlt: string;
+  title: string;
+  description: string;
+  href: string;
+  aspectRatio?: "video" | "portrait" | "square";
+}
+
+const { 
+  image, 
+  imageAlt, 
+  title, 
+  description, 
+  href, 
+  aspectRatio = "video" 
+} = Astro.props;
+
+// Mapping class สำหรับสัดส่วนรูป
+const aspectClasses = {
+  video: "aspect-video",
+  portrait: "aspect-[3/4]",
+  square: "aspect-square"
+};
+---
+
+<div class="flex flex-col bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300">
+  <div class={`overflow-hidden ${aspectClasses[aspectRatio]}`}>
+    <img src={image} alt={imageAlt} class="w-full h-full object-cover" />
+  </div>
+  
+  <div class="p-6 flex flex-col flex-grow">
+    <h3 class="text-xl font-bold text-primary mb-3">{title}</h3>
+    <p class="text-gray-600 mb-6 flex-grow line-clamp-3">{description}</p>
+    <Button href={href}
+            variant="outline">
+      ดูรายละเอียดเพิ่มเติม
+    </Button>
+  </div>
+</div>

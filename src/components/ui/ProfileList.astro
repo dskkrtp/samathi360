@@ -1,0 +1,51 @@
+---
+interface Item {
+  title: string;
+  // ปรับให้ description รองรับได้ทั้งแบบ String หรือ Array ของ String
+  description: string | string[]; 
+}
+
+interface Props {
+  title: string;
+  items?: Item[];
+}
+
+const { title, items = [] } = Astro.props;
+---
+
+{items && items.length > 0 && (
+  <section>
+    <div class="relative flex items-center py-8 md:py-12">
+      <div class="flex-grow border-t border-gray-200"></div>
+      <span class="flex-shrink-0 mx-4 text-sm font-semibold tracking-widest text-gray-500 uppercase px-3">
+        {title}
+      </span>
+      <div class="flex-grow border-t border-gray-200"></div>
+    </div>
+
+    <ul class="space-y-6 max-w-2xl mx-auto">
+      {items.map((item) => (
+        <li class="p-2 text-center">
+          <h3 class="font-bold text-lg text-primary leading-tight mb-1">{item.title}</h3>
+          
+          {/* เช็คเงื่อนไขของ description ตรงนี้ */}
+          {Array.isArray(item.description) ? (
+            /* ถ้า description เป็น Array (หลายข้อ) ให้แสดงแบบมี Dot ชิดซ้าย */
+            <ul class="mt-2 space-y-1.5 inline-block text-left">
+              {item.description.map((desc) => (
+                <li class="flex items-start gap-2 text-gray-600 text-base">
+                  <span class="inline-block w-1.5 h-1.5 mt-2 rounded-full bg-gray-400 shrink-0"></span>
+                  <span>{desc}</span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            /* ถ้า description เป็นข้อความธรรมดา ให้แสดงผลแบบเดิม */
+            <p class="text-gray-600 text-base">{item.description}</p>
+          )}
+
+        </li>
+      ))}
+    </ul>
+  </section>
+)}

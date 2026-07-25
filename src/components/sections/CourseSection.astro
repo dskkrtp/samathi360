@@ -1,0 +1,51 @@
+---
+import CourseCard from "../ui/CourseCard.astro";
+import SectionTitle from "../ui/SectionTitle.astro";
+import { getCollection } from "astro:content";
+
+interface Props {
+  title: string;              // หัวข้อที่ปรับเปลี่ยนได้
+  description: string;        // คำอธิบายที่ปรับเปลี่ยนได้
+  showOnlyFeatured?: boolean; // เลือกกรอง featured
+  filterCategory?: string;    // เลือกกรอง category
+}
+
+const { title, description, showOnlyFeatured = false, filterCategory } = Astro.props;
+
+let courses = await getCollection("courses");
+courses.sort((a, b) => a.data.order - b.data.order);
+
+// LOGIC การกรองแบบเลือกได้ว่าจะทำ Featured หรือ Category
+if (showOnlyFeatured) {
+  // ถ้าโหมดนี้ทำงาน จะไม่สนใจ category
+  courses = courses.filter(c => c.data.featured === true);
+} else if (filterCategory) {
+  // ถ้ามี category จะกรองเฉพาะหมวดนี้
+  courses = courses.filter(c => c.data.category === filterCategory);
+}
+// ถ้าไม่ใส่ทั้งคู่ มันจะโชว์ทั้งหมด (Default)
+---
+
+<section class="py-20 bg-gray-50">
+  <div class="max-w-6xl mx-auto px-6">
+    <SectionTitle title={title} description={description} />
+    
+    {/* ใช้ flex flex-wrap และ justify-center แทน grid */}
+    <div class="flex flex-wrap justify-center gap-8">
+      
+      {courses.map((course) => (
+        <div class="w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.5rem)]">
+          <CourseCard
+            title={course.data.title}
+            description={course.data.description}
+            href={`/courses/${course.id}`}
+            image={course.data.image}
+            category={course.data.category}
+            featured={course.data.featured}
+          />
+        </div>
+      ))}
+
+    </div>
+  </div>
+</section>

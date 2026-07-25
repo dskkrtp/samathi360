@@ -1,0 +1,28 @@
+---
+import ImageCard from "../ui/ImageCard.astro";
+import { getCollection } from "astro:content";
+
+// รับค่า collectionName เพื่อให้ Section นี้ใช้ได้กับทั้ง courses หรือ events
+interface Props {
+  collection: "awards";
+  title: string;
+  aspectRatio?: "video" | "portrait" | "square";
+}
+
+const { collection, title, aspectRatio = "video" } = Astro.props;
+const items = await getCollection(collection);
+items.sort((a, b) => a.data.order - b.data.order);
+---
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {items.map((item) => (
+        <ImageCard 
+          image={item.data.image}
+          imageAlt={item.data.title}
+          title={item.data.title}
+          description={item.data.description} 
+          href={`/${collection}/${item.id}`}
+          aspectRatio={aspectRatio}
+        />
+      ))}
+    </div>
